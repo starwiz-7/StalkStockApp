@@ -63,7 +63,7 @@ export default function Home({navigation}){
                     </View>
                 </View>
                 <View style={styles.line}></View>
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress = {() => navigation.navigate('Portfolio')}>
                 <Text style={{marginTop:15, color:BaseColor.whiteColor, fontSize:15, fontWeight:'bold'}}>See more portfolio</Text>
                 </TouchableOpacity>
             </View>
