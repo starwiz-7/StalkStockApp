@@ -9,7 +9,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import Main from './main';
 //Screens
 import Splash from '@screens/Splash'
-import Home from '@screens/Home';
+import Login from '@screens/Login';
+import Signup from '@screens/Signup'
 
 const RootStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -33,6 +34,8 @@ export default function Navigator(){
                 initialRouteName="Splash">
                     <RootStack.Screen name="Splash" component={Splash} options={{gestureEnabled:false}}/>
                     <RootStack.Screen name="Main" component={Main}/>
+                    <RootStack.Screen name="Login" component={Login}/>
+                    <RootStack.Screen name="Signup" component={Signup}/>
             </RootStack.Navigator>
         </NavigationContainer>
     );
