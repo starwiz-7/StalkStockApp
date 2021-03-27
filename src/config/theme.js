@@ -4,5 +4,6 @@ export const BaseColor = {
     greenColor: '#6ee8a9',
     redColor: '#d57576',
     whiteColor: '#fff',
-    greyColor: '#838697'
+    greyColor: '#838697',
+    limeColor: '#00FF00',
 };
