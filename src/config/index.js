@@ -1,3 +1,3 @@
 import { BaseColor } from './theme';
-
-export { BaseColor };
+import { Images } from './images';
+export { BaseColor, Images };

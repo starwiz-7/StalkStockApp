@@ -4,7 +4,7 @@ export default function Splash({navigation}){
 
     const onProcess = () => {
         setTimeout(() => {
-          navigation.push('Main')
+          navigation.push('Login')
         }, 3000);
       };
       useEffect(() => {
