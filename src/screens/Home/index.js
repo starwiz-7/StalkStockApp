@@ -128,7 +128,7 @@ export default function Home({navigation}){
                 </View>
             </View>
             
-            <Text style={[styles.homeText,{marginBottom:-10}]}>Hi, {name}</Text>
+            <Text style={[styles.homeText,{marginBottom:-10, color:BaseColor.greenColor}]}>Hi, {name}</Text>
             <Text style={{color:BaseColor.greyColor, marginTop:20, fontWeight:'bold'}}>Current Value</Text>
             <Text style={{color:BaseColor.whiteColor, marginTop:10, fontSize:32, fontWeight:'bold'}}>${fund}</Text>
             <View style={styles.line}></View>
@@ -158,7 +158,7 @@ export default function Home({navigation}){
                 </View>
                 <View style={styles.line}></View>
                 </View>
-                )):<Text style={{alignItems:'center', justifyContent: 'center', fontSize:15, color:BaseColor.whiteColor}}>No</Text>}
+                )):<Text style={{alignSelf:'center', justifyContent: 'center', fontSize:15, color:BaseColor.whiteColor,marginTop:20}}>No stocks purchased</Text>}
                 
                 {positions.length>0?<TouchableOpacity activeOpacity={0.5} onPress = {() => navigation.navigate('Portfolio')}>
                 <Text style={{marginTop:15, color:BaseColor.whiteColor, fontSize:15, fontWeight:'bold'}}>See more portfolio</Text>
@@ -189,7 +189,7 @@ export default function Home({navigation}){
                     </View>
                 ))
                     :
-                <Text style={{alignSelf:'center', justifyContent: 'center', fontSize:16, color:BaseColor.whiteColor}}>Cannot Fetch Records :(</Text>
+                <Text style={{alignSelf:'center', justifyContent: 'center', fontSize:16, color:BaseColor.whiteColor}}>Fetching stocks....</Text>
             }
                 
             </View>

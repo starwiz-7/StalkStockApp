@@ -1,12 +1,12 @@
 import  React,{useState,useEffect} from 'react';
-import { StyleSheet, View, ScrollView, Text,TextInput,Dimensions, } from 'react-native';
+import { StyleSheet, View, ScrollView, Text,TextInput,Dimensions, TouchableOpacity} from 'react-native';
 import {BaseColor} from '@config';
 import Icon from 'react-native-vector-icons/Feather';
 import database from '@react-native-firebase/database';
 import styles from "./style"
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 
-export default function Search() {
+export default function Search({navigation}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [symbol, setSymbol] = useState([]);
   const [name,setName] = useState([]);
@@ -43,9 +43,6 @@ export default function Search() {
         setResult(response)
     })
   }
-  useEffect(() => {
-    getAll();
-  },[])
 const {height, width} = Dimensions.get('window')
   return (
     <View style={styles.background}>
@@ -65,12 +62,12 @@ const {height, width} = Dimensions.get('window')
       </View>
       <ScrollView style={{paddingTop:20,paddingHorizontal:10}}>
         {result.length > 0 ? result.map((item,index) =>(
-            <View style = {styles.card}>
+            <TouchableOpacity activeOpacity={0.6} style = {styles.card} onPress={() => navigation.navigate('Stock',{symbol:item.symbol})}>
             <Text style={styles.resulttext}>{item.symbol}</Text>
             <Text style={{fontSize:13, color:BaseColor.greyColor}}>{item.name}</Text>
-            </View>
+            </TouchableOpacity>
         )):
-        <Text style={{color:BaseColor.greyColor}}>No such stock found</Text>
+        <Text style={{color:BaseColor.greyColor,alignSelf:'center',marginTop:40}}>No such stock found</Text>
         
         }
         

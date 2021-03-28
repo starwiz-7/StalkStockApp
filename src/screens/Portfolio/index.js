@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { View, Text, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StatusBar, TouchableOpacity, ScrollView,Modal,Pressable,TextInput } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Feather';
@@ -24,6 +24,7 @@ export default function Portfolio({ navigation }) {
     const [fundg, setFundg] = useState()
     const [color, setColor] = useState()
     const [arr, setArr] = useState()
+    const [modalVisible, setModalVisible] = useState(false);
     const reldiff = (a,b) =>{
         return 100 * Math.abs((a - b) / ((a + b) / 2));
     }
@@ -73,6 +74,23 @@ export default function Portfolio({ navigation }) {
             })
     }
 
+    const handleSell = (item,index) =>{
+        const user = auth().currentUser.uid;
+        firestore()
+            .collection('users')
+            .doc(user)
+            .collection('stocks')
+            .doc(item)
+            .delete()
+            .then(() =>{
+                firestore()
+                    .collection('users')
+                    .doc(user)
+                    .update({
+                        currentfunds:Number(curr)+Number(value[index])
+                    })
+            })
+    }
     const getPrice = (symbol,share,money) => {
         console.error(symbol)
         const lastPrice = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?displayPercent=true&token=${IEX_API_KEY}`;
@@ -102,6 +120,36 @@ export default function Portfolio({ navigation }) {
     }, [])
     return (
         <View style={styles.background}>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            
+            <Text style={styles.modalText}>Do you want to sell?</Text>
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent: 'space-evenly',left:0,right:0,flex:1}}>
+            <Pressable
+              style={{backgroundColor:BaseColor.redColor, width:80,height:40, marginTop:10,alignItems:'center',justifyContent: 'center',borderRadius:10}}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={{color:BaseColor.backgroundColor, fontSize:16}}>Cancel</Text>
+            </Pressable>
+            <Pressable
+              style={{backgroundColor:BaseColor.greenColor, width:80,height:40, marginTop:10,alignItems:'center',justifyContent: 'center',borderRadius:10,marginLeft:30}}
+              onPress={() => handleBuy(quantity)}
+            >
+              <Text style={{color:BaseColor.backgroundColor, fontSize:16}}>Sell</Text>
+            </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
             <ScrollView>
                 <StatusBar backgroundColor={BaseColor.darkGreenColor} />
                 <View style={styles.card1}>
@@ -133,12 +181,14 @@ export default function Portfolio({ navigation }) {
                             <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>{symbols[index]}</Text>
                             <Text style={{ color: BaseColor.greyColor, fontSize: 12 }}>{shares[index]} shares</Text>
                         </View>
-                        <View style={{ flex: 1 }}>
-                            <Text></Text>
-                        </View>
-                        <View style={{alignItems: 'center'}}>
+                        <View style={{alignItems: 'center',flex:1/3}}>
                             <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>${value[index]}</Text>
                             <Text style={{ color: change[index] !==undefined && change[index].charAt(0) === '-'? BaseColor.redColor:BaseColor.greenColor, fontSize: 14 }}>{change[index]}</Text>
+                        </View>
+                        <View style={{flex:1/3,alignItems:'flex-end'}}>
+                            <TouchableOpacity activeOpacity={0.6} style={{width:60,height:40,backgroundColor:BaseColor.greenColor, borderRadius:10,alignItems:'center',justifyContent: 'center'}} onPress={() => handleSell(item,index)}>
+                                <Text style={{fontSize:15,color:BaseColor.backgroundColor}}>Sell</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </TouchableOpacity>
