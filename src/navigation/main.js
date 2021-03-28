@@ -12,7 +12,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import Home from '@screens/Home';
 import Bookmark from '@screens/Bookmark';
 import Portfolio from '@screens/Portfolio';
-
+import Search from '@screens/Search';
+import Stock from '@screens/Stock'
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
@@ -58,7 +59,7 @@ function BottomTabNavigator() {
                 }} />
             <BottomTab.Screen
                 name="Search"
-                component={Home}
+                component={Search}
                 options={{
                     tabBarIcon: ({ color }) => (<Icon name='search' size={25} color={color} />)
                 }} />
@@ -70,7 +71,7 @@ function BottomTabNavigator() {
                 }} />
             <BottomTab.Screen
                 name="Profile"
-                component={Home}
+                component={Stock}
                 options={{
                     tabBarIcon: ({ color }) => (<Icon name='user' size={25} color={color} />)
                 }} />
