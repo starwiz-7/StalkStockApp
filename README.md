@@ -12,7 +12,7 @@ this template has been taken from https://github.com/othneildrew/Best-README-Tem
 <br />
 <p align="center">
   <a href="">
-    <img src="src/assets/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="src/assets/images/logo.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">StalkStock</h3>
@@ -98,16 +98,10 @@ Follow the steps below:
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -125,13 +119,13 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License.
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/starwiz-7/StalkStockApp/graphs/contributors?color=blueviolet
+[contributors-shield]: https://img.shields.io/github/contributors/starwiz-7/StalkStockApp?color=green
+[contributors-url]: https://github.com/starwiz-7/StalkStockApp/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/starwiz-7/StalkStockApp?color=blue
 [forks-url]: https://github.com/starwiz-7/StalkStockApp/network/members
 [stars-shield]: https://img.shields.io/github/stars/starwiz-7/StalkStockApp?color=red
