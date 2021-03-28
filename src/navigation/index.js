@@ -11,7 +11,7 @@ import Main from './main';
 import Splash from '@screens/Splash'
 import Login from '@screens/Login';
 import Signup from '@screens/Signup'
-
+import Stock from '@screens/Stock';
 const RootStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
@@ -32,10 +32,13 @@ export default function Navigator() {
                 mode="modal"
                 headerMode="none"
                 initialRouteName="Splash">
+
                 <RootStack.Screen name="Splash" component={Splash} options={{ gestureEnabled: false }} />
                 <RootStack.Screen name="Main" component={Main} />
                 <RootStack.Screen name="Login" component={Login} />
                 <RootStack.Screen name="Signup" component={Signup} />
+                <RootStack.Screen name="Stock" component={Stock} />
+
             </RootStack.Navigator>
         </NavigationContainer>
     );

@@ -14,6 +14,8 @@ import Bookmark from '@screens/Bookmark';
 import Portfolio from '@screens/Portfolio';
 import Profile from '@screens/Profile';
 
+import Search from '@screens/Search';
+import Stock from '@screens/Stock'
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
@@ -59,7 +61,7 @@ function BottomTabNavigator() {
                 }} />
             <BottomTab.Screen
                 name="Search"
-                component={Home}
+                component={Search}
                 options={{
                     tabBarIcon: ({ color }) => (<Icon name='search' size={25} color={color} />)
                 }} />
@@ -72,6 +74,7 @@ function BottomTabNavigator() {
             <BottomTab.Screen
                 name="Profile"
                 component={Profile}
+
                 options={{
                     tabBarIcon: ({ color }) => (<Icon name='user' size={25} color={color} />)
                 }} />

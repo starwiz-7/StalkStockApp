@@ -1,20 +1,73 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { View, Text, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Feather';
-import { BaseColor } from '@config'
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import { BaseColor } from '@config';
+import {IEX_API_KEY} from '../../../const';
 import style from './style';
 
-export default function Home({ navigation }) {
 
+export default function Home({ navigation }) {
+    // let watchlist =
+    const [watchlist, setWatchlist] = useState([]);
+    const [value, setValue] = useState([]);
+    const [change, setChange] = useState([]);
+    const [stock, setStock] = useState([]);
+    const getPrice = () =>{
+        let symbols = "";
+        setValue([]);
+        setChange([]);
+        setStock([]);
+        if(watchlist.length !== 0){
+            symbols += watchlist[0]
+            for(let i = 1; i < watchlist.length; i++){
+                symbols += ",";
+                symbols += watchlist[i];
+            }
+            const latestPrice = `https://cloud.iexapis.com/stable/stock/market/batch?symbols=${symbols}&types=quote&token=${IEX_API_KEY}`
+            fetch(latestPrice)
+            .then(res => res.json())
+            .then(result =>{
+                for(let i=0;i<watchlist.length;i++){
+                    if(result[watchlist[i]].quote.latestPrice !== null){
+                        setValue(old => [...old,result[watchlist[i]].quote.latestPrice.toFixed(2)])
+                        setChange(old => [...old,parseFloat(result[watchlist[i]].quote.changePercent).toFixed(2)])
+                        setStock(old => [...old,result[watchlist[i]].quote.companyName])
+                        
+                    }
+                }
+            })
+        }
+    }
+    const getWatchlist = () =>{
+        const user = auth().currentUser;
+        if(user !== undefined){
+            firestore()
+                .collection('users')
+                .doc(user.uid)
+                .onSnapshot(doc =>{
+                    let watch = doc.data()['watchlist'];
+                    setWatchlist(watch)
+                })
+        }
+    }
+    useEffect(() => {
+        getWatchlist();
+    }, [])
+
+    useEffect(() =>{
+        getPrice();
+    }, [watchlist])
     return (
         <View style={styles.background}>
             <ScrollView>
                 <StatusBar backgroundColor={BaseColor.darkGreenColor} />
                 <View style={styles.card1}>
                     <View style={styles.header}>
-                        <Text style={styles.homeText}>Bookmarks</Text>
+                        <Text style={styles.homeText}>Watchlist</Text>
                         <View style={styles.profile}>
                             <Icons name='star' size={20} color={BaseColor.backgroundColor} />
                         </View>
@@ -28,223 +81,34 @@ export default function Home({ navigation }) {
                     </TouchableOpacity>
                     {/* </View> */}
                 </View>
-
-                <TouchableOpacity activeOpacity={0.5}>
+                {watchlist.length >0 ? watchlist.map((item,index) =>(
+                    <TouchableOpacity activeOpacity={0.5}>
                     <View style={styles.card3}>
-                        {/* <View style={styles.portfolioRow}>
-                        <View style={{ flex: 1 / 3 }}>
-                            <Text style={{ color: BaseColor.greyColor, marginTop: 20, fontWeight: 'bold' }}>Name</Text>
-                        </View>
-                        <View style={{ flex: 1 / 2 }}>
-                            <Text style={{ color: BaseColor.greyColor, marginTop: 20, fontWeight: 'bold' }}>Chart</Text>
-                        </View>
-                        <View style={{ flex: 1 / 3 }}>
-                            <Text style={{ color: BaseColor.greyColor, marginTop: 20, fontWeight: 'bold' }}>Price</Text>
-                        </View>
-                    </View> */}
-
-                        {/* <View style={styles.line}></View> */}
 
                         <View style={styles.bookmarkRow}>
                             <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
+                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>{item}</Text>
+                                <Text style={{ color: BaseColor.greyColor, fontSize: 12 }}>{stock[index]}</Text>
                             </View>
                             <View style={{ flex: 1 }}>
                                 <Text>                 </Text>
                             </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
+                            <View style={{ flex: 1 / 2, alignItems: 'center'}} >
+                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>${value[index]}</Text>
+                                <Text style={{ color: change[index] !== undefined && change[index].charAt(0) === '-' ? BaseColor.redColor : BaseColor.greenColor, fontSize: 15 }}>{change[index]}%</Text>
                             </View>
                         </View>
-
-
-
-
-
-                        {/* <View style={styles.line}></View>
-                    <View style={styles.portfolioRow}>
-                        <View style={{ flex: 1 / 3 }}>
-                            <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                            <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>400 shares</Text>
                         </View>
-                        <View style={{ flex: 1 / 2 }}>
-                            <Text>Chartttttttttttttttttttt</Text>
-                        </View>
-                        <View style={{ flex: 1 / 3 }}>
-                            <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>$200</Text>
-                            <Text style={{ color: BaseColor.greenColor, fontSize: 14 }}>+$0.25</Text>
-                        </View>
-                    </View> */}
-
-
-                        {/* <Text style={{ marginTop: 15, color: BaseColor.whiteColor, fontSize: 15, fontWeight: 'bold' }}>See more portfolio</Text> */}
-                    </View>
                 </TouchableOpacity>
+                )):
+                <View style={{alignSelf: 'center', alignItems:'center', marginTop:15}}>
+                    <Text style={{fontSize:16, color:BaseColor.whiteColor}}>No stocks in watchlist!!!</Text>
+                </View>
+                }
+                
 
 
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity activeOpacity={0.5}>
-                    <View style={styles.card3}>
-                        <View style={styles.bookmarkRow}>
-                            <View style={{ flex: 1 / 3 }}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 18 }}>AAPL</Text>
-                                <Text style={{ color: BaseColor.greyColor, fontSize: 14 }}>Apple Inc</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text>                 </Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.whiteColor, fontSize: 22 }}>$200</Text>
-                            </View>
-                            <View style={{ flex: 1 / 2 }} style={styles.priceRow}>
-                                <Text style={{ color: BaseColor.greenColor, fontSize: 15 }}>+$0.25</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+                
 
 
             </ScrollView>
