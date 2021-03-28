@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Home from '@screens/Home';
 import Bookmark from '@screens/Bookmark';
 import Portfolio from '@screens/Portfolio';
+import Profile from '@screens/Profile';
 
 const MainStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -70,7 +71,7 @@ function BottomTabNavigator() {
                 }} />
             <BottomTab.Screen
                 name="Profile"
-                component={Home}
+                component={Profile}
                 options={{
                     tabBarIcon: ({ color }) => (<Icon name='user' size={25} color={color} />)
                 }} />
