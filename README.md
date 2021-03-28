@@ -5,8 +5,6 @@ this template has been taken from https://github.com/othneildrew/Best-README-Tem
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -62,11 +60,6 @@ this template has been taken from https://github.com/othneildrew/Best-README-Tem
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-
-
 Motivation:
 Stock market is still an enigma for a lot of people. And even though you can study about it and think you understand it enough to take the first step, it is always difficult to buy that first stock. Because every investment comes with an attached expectation of profit, and it is not an unfair expectation. Hence we wanted to simulate the experience of stock market without the need to spend real money.
 
@@ -127,3 +120,15 @@ Contributions are what make the open source community such an amazing place to b
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: https://github.com/starwiz-7/StalkStockApp/graphs/contributors?color=blueviolet
+[forks-shield]: https://img.shields.io/github/forks/starwiz-7/StalkStockApp?color=blue
+[forks-url]: https://github.com/starwiz-7/StalkStockApp/network/members
+[stars-shield]: https://img.shields.io/github/stars/starwiz-7/StalkStockApp?color=red
+[stars-url]: https://github.com/starwiz-7/StalkStockApp/stargazers
+[issues-shield]: https://img.shields.io/github/issues/starwiz-7/StalkStockApp?color=yellow
+[issues-url]: https://github.com/starwiz-7/StalkStockApp/issues
