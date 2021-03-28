@@ -15,10 +15,10 @@ this template has been taken from https://github.com/othneildrew/Best-README-Tem
     <img src="src/assets/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">StalkStock</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    An awesome Stock Market Investment Simulator!
     <br />
     <a href=https://github.com/starwiz-7/StalkStockApp><strong>Explore the docs »</strong></a>
     <br />
@@ -83,7 +83,13 @@ We made an android application that
 Follow the instructions given below to get started with out app.
 
 ### Installation
-
+Follow the steps below:
+* Make sure you have npm and nodejs installed in your pc.
+* Clone the repository.
+* Open in terminal.
+* execute the following commands.
+* npm install
+* npx react-native run-android
 
 
 
