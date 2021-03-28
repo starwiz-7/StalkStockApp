@@ -20,8 +20,6 @@ this template has been taken from https://github.com/othneildrew/Best-README-Tem
   <p align="center">
     An awesome Stock Market Investment Simulator!
     <br />
-    <a href=https://github.com/starwiz-7/StalkStockApp><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href=https://github.com/starwiz-7/StalkStockApp>View Demo</a>
     ·
@@ -76,6 +74,8 @@ We made an android application that
 
 * [React Native](https://reactnative.dev/)
 * [React Native Paper](https://reactnativepaper.com/)
+* Alpha Vantage API
+* IEX API
 
 
 <!-- GETTING STARTED -->
@@ -86,17 +86,12 @@ Follow the instructions given below to get started with out app.
 Follow the steps below:
 * Make sure you have npm and nodejs installed in your pc.
 * Clone the repository.
-* Open in terminal.
+* Open terminal and navigate to the project folder.
 * execute the following commands.
 * npm install
 * npx react-native run-android
 
 
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 <!-- ROADMAP -->
 ## Roadmap
