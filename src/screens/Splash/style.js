@@ -7,7 +7,7 @@ export default StyleSheet.create({
         flex: 1,
         height: '100%',
         width: '100%',
-        padding: 5
+        padding: 20
     },
     card1: {
         marginTop: 15,

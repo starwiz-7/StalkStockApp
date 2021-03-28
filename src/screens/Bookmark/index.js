@@ -82,7 +82,7 @@ export default function Home({ navigation }) {
                     {/* </View> */}
                 </View>
                 {watchlist.length >0 ? watchlist.map((item,index) =>(
-                    <TouchableOpacity activeOpacity={0.5}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('Stock',{symbol:item})}>
                     <View style={styles.card3}>
 
                         <View style={styles.bookmarkRow}>

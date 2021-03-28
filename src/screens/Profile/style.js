@@ -60,7 +60,8 @@ export default StyleSheet.create({
         // flex: 1,
         marginTop: 10,
         left: 0,
-        right: 0
+        right: 0,
+        alignItems: 'center'
     },
     card4: {
         flexDirection: 'row',

@@ -8,7 +8,8 @@ import firestore from '@react-native-firebase/firestore';
 import {BaseColor} from '@config';
 import {IEX_API_KEY} from '../../../const'
 import style from './style';
-
+import Chart1 from './chart1';
+import Chart2 from './chart2';
 export default function Home({navigation}){
     let i = 0;
     let val = 0;
@@ -33,6 +34,8 @@ export default function Home({navigation}){
 
     const getUser = () =>{
         const user = auth().currentUser;
+        // auth()
+        //     .signOut()
         firestore()
             .collection('users')
             .doc(user.uid)
@@ -83,10 +86,10 @@ export default function Home({navigation}){
                     snapshot.forEach(doc => {
                         if(i<=3){
                         setPositions(old => [...old, doc.id])
-                        setSymbols(old =>[...old, doc.data().symbol])
+                        setSymbols(old =>[...old, doc.data().symb])
                         setShares(old =>[...old, doc.data().shares])
                         setMoneyPaid(old =>[...old, doc.data().moneyPaid])
-                        getPrice(doc.data().symbol,doc.data().shares, doc.data().moneyPaid);
+                        getPrice(doc.data().symb,doc.data().shares, doc.data().moneyPaid);
                         i++;}
                     })
                 }
@@ -133,7 +136,7 @@ export default function Home({navigation}){
             <Text style={{color:BaseColor.whiteColor, marginTop:10, fontSize:32, fontWeight:'bold'}}>${fund}</Text>
             <View style={styles.line}></View>
             {/* <View style={styles.chart}> */}
-                <TouchableOpacity activeOpacity={0.4} style={styles.chart}>
+                <TouchableOpacity activeOpacity={0.4} style={styles.chart} onPress={() => navigation.navigate('Profile')}>
                 <Icons name='trending-up' size={20} color={BaseColor.whiteColor} style={{fontWeight:'normal'}}/>
                 <Text style={{color:BaseColor.whiteColor, marginLeft:10, fontSize:15}}>Open Chart</Text>
                 </TouchableOpacity>
@@ -148,10 +151,10 @@ export default function Home({navigation}){
                         <Text style={{color:BaseColor.whiteColor, fontSize:18}}>{symbols[index]}</Text>
                         <Text style={{color:BaseColor.greyColor, fontSize:12}}>{shares[index]} shares</Text>
                     </View>
-                    <View style={{flex:1}}>
-                        <Text>Chartttttttttttttttttttt</Text>
+                    <View style={{flex:1, alignItems:"center",}}>
+                        {change[index] !==undefined && change[index].charAt(0) === '-'? <Chart2/>:<Chart1/>}
                     </View>
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{alignItems: 'center',alignSelf:'flex-end'}}>
                         <Text style={{color:BaseColor.whiteColor, fontSize:18}}>${value[index]}</Text>
                         <Text style={{color: change[index] !==undefined && change[index].charAt(0) === '-'? BaseColor.redColor:BaseColor.greenColor, fontSize:14}}>{change[index]}</Text>
                     </View>
@@ -172,19 +175,20 @@ export default function Home({navigation}){
                 </View>
                 {stockSymbol.length >0 ? stockSymbol.map((item,index)=>(
                     <View>
-                    <View style={styles.portfolioRow}>
+                    <TouchableOpacity style={styles.portfolioRow} activeOpacity={0.6} onPress={() => navigation.navigate('Stock',{symbol:item})}>
                         <View style={{flex:1/3}}>
                             <Text style={{color:BaseColor.whiteColor, fontSize:18}}>{item}</Text>
                             <Text style={{color:BaseColor.greyColor, fontSize:10}}>{stockName[index]}</Text>
                         </View>
-                        <View style={{flex:1}}>
-                            <Text>Chartttttttttttttttttttt</Text>
+                        <View style={{flex:1, alignItems:"center",}}>
+                            {stockChange[index]!==undefined && stockChange[index].charAt(0) !== '-'  ? <Chart1/>:<Chart2/>}
+                            
                         </View>
                         <View style={{alignItems: 'center'}}>
                             <Text style={{color:BaseColor.whiteColor, fontSize:18}}>${stockPrice[index]}</Text>
                             <Text style={{color: stockChange[index]!==undefined && stockChange[index].charAt(0) !== '-'  ?BaseColor.greenColor: BaseColor.redColor, fontSize:14}}>{stockChange[index]}</Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.line}></View>
                     </View>
                 ))

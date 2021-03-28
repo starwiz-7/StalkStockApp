@@ -29,6 +29,11 @@ const [color,setColor] = useState(1)
 const [modalVisible, setModalVisible] = useState(false);
 const [quantity,setQuantity] = useState(0)
 const [tick,setTick] = useState('')
+const [watchlist,setWatchlist] = useState([])
+const [include,setInclude] = useState(false);
+// const [url,setUrl] = useState([])
+// const [headline,setHeadline] = useState([])
+// const [img,setImg] = useState([])
 const getChart = () =>{
   setData([]);
   const s = JSON.stringify(symbol)
@@ -54,6 +59,7 @@ const getChart = () =>{
       }
     })
 }
+
   const getPrice = () =>{
     const s = JSON.stringify(symbol)
     const symb = s.substring(1,s.length-1)
@@ -113,11 +119,75 @@ const getChart = () =>{
           setModalVisible(!modalVisible)
         })
   }
+
+  const getWatchlist = () =>{
+    const s = JSON.stringify(symbol)
+    const symb = s.substring(1,s.length-1)
+    const user = auth().currentUser;
+    if(user !== undefined){
+        firestore()
+            .collection('users')
+            .doc(user.uid)
+            .onSnapshot(doc =>{
+                let watch = doc.data()['watchlist'];
+                setWatchlist(watch)
+                if(watch.includes(symb)){
+                  setInclude(true);
+                }
+            })
+    }
+}
+
+const handleWatchlist = () => {
+  const user = auth().currentUser.uid;
+  const s = JSON.stringify(symbol)
+  const symb = s.substring(1,s.length-1)
+  if (include) {
+    firestore()
+      .collection("users")
+      .doc(user)
+      .update({
+        watchlist: firestore.FieldValue.arrayRemove(
+          symb
+        ),
+      });
+      setInclude(false);
+  } else {
+    firestore()
+      .collection("users")
+      .doc(user)
+      .update({
+        watchlist: firestore.FieldValue.arrayUnion(symb),
+      });
+  }
+}
+  // const getNews = () =>{
+  //   // setHeadline([])
+  //   const s = JSON.stringify(symbol)
+  // const symb = s.substring(1,s.length-1)
+  // fetch(
+  //   `https://cloud.iexapis.com/stable/stock/${symb}/news?token=${IEX_API_KEY}`,
+  // )
+  // .then(res => res.json())
+  // .then(result => {
+  //   for(let i=0;i<3;i++){
+  //     if(typeof result[i] !== "undefined"){
+  //       setHeadline(old => [...old,result[i].headline])
+  //       console.error(result[i].headline)
+  //       setUrl(old => [...old,result[i].url])
+  //       setImg(old => [...old, result[i].image])
+  //     }
+  //   }
+  // })
+  // }
+
   useEffect(() => {
     const s = JSON.stringify(symbol)
     setTick(s.substring(1,s.length-1))
     getPrice();
     getChart();
+    // getNews();
+    getWatchlist();
   },[])
   return (
     <View style={styles.background}>
@@ -162,9 +232,11 @@ const getChart = () =>{
     <View style={styles.tophalf}>
         <View style={styles.header}>
             <Icon name='chevron-left' size={20} color={BaseColor.whiteColor} onPress={() => navigation.goBack()}/>
-            <TouchableOpacity activeOpacity={0.4} style={{borderRadius:20, borderWidth:1, borderColor:BaseColor.whiteColor,paddingHorizontal:10,paddingVertical:5, flexDirection:'row',alignItems: 'center',justifyContent: 'center'}}>
-                <Text style={{color:BaseColor.whiteColor, marginRight:5}}>Follow</Text>
-                <Icon name="star" color={BaseColor.whiteColor} size={15} />
+            <TouchableOpacity activeOpacity={0.4} style={{borderRadius:20, borderWidth:1, borderColor:BaseColor.whiteColor,paddingHorizontal:10,paddingVertical:5, flexDirection:'row',alignItems: 'center',justifyContent: 'center'}} onPress={() => handleWatchlist()}>
+                <Text style={{color:BaseColor.whiteColor, marginRight:5}}>{include === true ? "Unfollow":"Follow"}</Text>
+                {include === true ? 
+                <Icon name="star" color={BaseColor.whiteColor} size={15} solid/> : 
+                <Icon name="star" color={BaseColor.whiteColor} size={15} />}
             </TouchableOpacity>
         </View>
         <View>
@@ -182,30 +254,14 @@ const getChart = () =>{
   style={{
     data: { stroke: percent !== undefined && percent.charAt(0) === '-' ? BaseColor.redColor : BaseColor.greenColor},
   }}
-  padding={{left:20, right:20,bottom:10,top:10}}
-  height={150}
+  padding={{left:10, right:20,bottom:10,top:10}}
+  height={0.5*height}
   // width={400}
   data={data}
 />:<Text style={{color: BaseColor.whiteColor, alignSelf:'center', marginTop:30,marginBottom:40}}>Fetching...</Text>}
     </View>
 
-      <View>
-        <Text style={{ flex: 1/2 }}></Text>
-      </View>
-      <ScrollView horizontal={true} style={styles.container}>
-        <View style={styles.buttonContainer}>
-        <Button title="Summary" color='BaseColor.darkGreenColor'>Summary</Button>
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button title="News" color='BaseColor.darkGreenColor'>News</Button>
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button title="Conversations" color='BaseColor.darkGreenColor'>Conversations</Button>
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button title="Statistics" color='BaseColor.darkGreenColor'>Statistics</Button>
-        </View>        
-      </ScrollView>
+      
     
     
     </View>

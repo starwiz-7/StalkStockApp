@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StatusBar, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Feather';
 import { BaseColor } from '@config'
 import style from './style';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default function Home({ navigation }) {
     const [text, onChangeText] = useState("");
+    const [name,setName] = useState('');
+    const [value,setValue] = useState('');
+    const [mail,setMail] = useState('');
+    const getDetails = () =>{
+        const user = auth().currentUser.uid;
+        firestore()
+            .collection('users')
+            .doc(user)
+            .get()
+            .then((doc) =>{
+                setName(doc.data()['username'])
 
+                setValue(doc.data()['funds'])
+                setMail(doc.data()['email'])
+            })
+    }
+    const logout = () =>{
+        auth()
+            .signOut()
+            .then(()=>{
+                navigation.navigate('Login')
+            })
+    }
+    useEffect(() => {
+        getDetails();
+    },[])
     return (
         <View style={styles.background}>
             <ScrollView>
@@ -17,27 +44,22 @@ export default function Home({ navigation }) {
                     <View style={styles.header}>
                         <Text style={{ color: BaseColor.whiteColor, marginTop: 10, fontSize: 32, fontWeight: 'bold' }}>
                             <Text>Hey </Text>
-                            <Text style={{ color: BaseColor.greenColor }}>starwiz</Text>
+                            <Text style={{ color: BaseColor.greenColor }}>{name}</Text>
                         </Text>
-                        <TouchableOpacity activeOpacity={0.4}>
+                        <TouchableOpacity activeOpacity={0.4} onPress={() => logout()}>
                             <View style={styles.profile}>
                                 <Icons name='log-out' size={20} color={BaseColor.backgroundColor} />
                             </View>
                         </TouchableOpacity>
                     </View>
                     <Text style={{ color: BaseColor.greyColor, marginTop: 20, fontWeight: 'bold' }}>Total Account Value</Text>
-                    <Text style={{ color: BaseColor.whiteColor, marginTop: 10, fontSize: 32, fontWeight: 'bold' }}>$20,12,000</Text>
+                    <Text style={{ color: BaseColor.whiteColor, marginTop: 10, fontSize: 32, fontWeight: 'bold' }}>${value}</Text>
                 </View>
                 <View style={styles.card2}>
                     <Text style={{ color: BaseColor.whiteColor, fontSize: 20 }}>Registered Email Address</Text>
                     <View style={styles.portfolioRow}>
-                        <Text style={{ color: BaseColor.greyColor, fontSize: 17 }}>xyz@gmail.com</Text>
+                        <Text style={{ color: BaseColor.greyColor, fontSize: 17 ,alignSelf:'center'}}>{mail}</Text>
                     </View>
-
-                    <View style={styles.line}></View>
-                    <TouchableOpacity activeOpacity={0.5} >
-                        <Text style={{ marginTop: 15, color: BaseColor.whiteColor, fontSize: 13, fontWeight: 'bold' }}>Change email address</Text>
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.card2}>
@@ -45,10 +67,6 @@ export default function Home({ navigation }) {
                     <View style={styles.portfolioRow}>
                         <Text style={{ color: BaseColor.greyColor, fontSize: 17 }}>*********</Text>
                     </View>
-                    <View style={styles.line}></View>
-                    <TouchableOpacity activeOpacity={0.5} >
-                        <Text style={{ marginTop: 15, color: BaseColor.whiteColor, fontSize: 13, fontWeight: 'bold' }}>Change Password</Text>
-                    </TouchableOpacity>
                 </View>
 
 

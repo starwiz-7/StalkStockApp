@@ -61,13 +61,15 @@ export default function Portfolio({ navigation }) {
             .doc(user.uid)
             .collection('stocks')
             .onSnapshot(snapshot =>{
+                console.error(snapshot.docs.length)
                 if(snapshot.docs.length !== 0){
                     snapshot.forEach(doc => {
                         setPositions(old => [...old, doc.id])
-                        setSymbols(old =>[...old, doc.data().symbol])
+                        setSymbols(old =>[...old, doc.data().symb])
+                        console.error(doc.data().symb)
                         setShares(old =>[...old, doc.data().shares])
                         setMoneyPaid(old =>[...old, doc.data().moneyPaid])
-                        getPrice(doc.data().symbol,doc.data().shares, doc.data().moneyPaid);
+                        getPrice(doc.data().symb,doc.data().shares, doc.data().moneyPaid);
                         i++;
                     })
                 }
